@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/seiyab/gorcerer/cmd/inspect"
 	"github.com/spf13/cobra"
 )
 
@@ -23,6 +24,7 @@ func rootCmd() *cobra.Command {
 
 func Execute() {
 	cmd := rootCmd()
+	cmd.AddCommand(inspect.Cmd())
 	if err := cmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
