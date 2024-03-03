@@ -18,14 +18,7 @@ jobs:
     - name: Set up gost
       run: go install github.com/seiyab/gost/gost@latest
 
-    - name: Print variables
-      run: |
-        echo ${{ github.event.authorAssociation }}
-        echo ${{ github.event.author.id }}
-        echo ${{ github.event.repository.owner.id }}
-
     - name: Run
-      if: ${{ github.event.author.id == github.event.repository.owner.id }}
       run: go run ./ job "${{ github.event.body }}"
         
 
