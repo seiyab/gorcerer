@@ -31,7 +31,11 @@ func inspect(repository string) (string, error) {
 	}); err != nil {
 		return "", err
 	}
-	return formatReport(result), nil
+	return fmt.Sprintf(
+		"Inspected %q\n\n%s",
+		repository,
+		formatReport(result),
+	), nil
 }
 
 func gitClone(url string, dir string) error {
@@ -59,6 +63,9 @@ func formatReport(report gost.Report) string {
 				)
 			}
 		}
+	}
+	if len(lines) == 0 {
+		lines = append(lines, "No issues found")
 	}
 	return strings.Join(lines, "\n")
 }

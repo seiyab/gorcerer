@@ -1,39 +1,33 @@
 package output
 
 import (
-	"bytes"
 	"context"
-	"io"
+	"fmt"
 
 	"github.com/google/go-github/v60/github"
-	"github.com/seiyab/gorcerer/utils"
 )
 
-type IssueComment struct {
-	gh    *github.Client
-	issue *github.Issue
-	buf   bytes.Buffer
-}
+type Output func(a ...any) error
 
-var _ io.WriteCloser = &IssueComment{}
-
-func NewIssueComment(client *github.Client, issue *github.Issue) IssueComment {
-	return IssueComment{
-		gh:    client,
-		issue: issue,
-		buf:   bytes.Buffer{},
-	}
-}
-
-func (ic *IssueComment) Write(p []byte) (n int, err error) {
-	return ic.buf.Write(p)
-}
-
-func (ic *IssueComment) Close() error {
-	repo := ic.issue.Repository
-	_, _, err := ic.gh.Issues.CreateComment(context.Background(),
-		repo.Owner.GetName(), repo.GetName(), *ic.issue.Number,
-		&github.IssueComment{Body: utils.Ref(ic.buf.String())},
-	)
+func Println(a ...any) error {
+	_, err := fmt.Println(a...)
 	return err
+}
+
+var _ Output = Println
+
+func NewIssueComment(client *github.Client, issue int) Output {
+	return func(a ...any) error {
+		s := fmt.Sprintln(a...)
+		_, _, err := client.Issues.CreateComment(
+			context.Background(),
+			"seiyab", "gorcerer",
+			issue,
+			&github.IssueComment{Body: &s},
+		)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
 }

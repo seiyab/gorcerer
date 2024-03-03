@@ -1,13 +1,15 @@
 package job
 
 import (
-	"fmt"
+	"os"
 
 	"github.com/google/go-github/v60/github"
+	"github.com/seiyab/gorcerer/output"
 	"github.com/spf13/cobra"
 )
 
 func Cmd() *cobra.Command {
+	var issue int
 	cmd := &cobra.Command{
 		Use:  "job",
 		Args: cobra.ExactArgs(1),
@@ -21,13 +23,19 @@ func Cmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			_, err = fmt.Println(m)
-			if err != nil {
+
+			out := output.Println
+			if issue != 0 {
+				c := github.NewClient(nil).
+					WithAuthToken(os.Getenv("GITHUB_TOKEN"))
+				out = output.NewIssueComment(c, issue)
+			}
+			if err := out(m); err != nil {
 				return err
 			}
-			_ = github.NewClient(nil)
 			return nil
 		},
 	}
+	cmd.Flags().IntVar(&issue, "issue", 0, "issue number")
 	return cmd
 }
