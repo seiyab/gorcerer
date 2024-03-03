@@ -17,6 +17,6 @@ jobs:
 
     - name: Run
       if: ${{ github.event.author.id == github.event.repository.owner.id }}
-      run: go run ./ job "${{ gitub.event.body }}"
+      run: go run ./ job "${{ github.event.body }}"
         
 
