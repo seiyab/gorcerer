@@ -15,10 +15,15 @@ jobs:
       with:
         go-version: '1.21.1'
 
+    - name: Print variables
+      run: |
+        echo ${{ github.event.comment.author.id }}
+        echo ${{ github.event.repository.owner.id }}
+
     - name: Set up gost
       run: go install github.com/seiyab/gost/gost@latest
 
     - name: Run
-      run: go run ./ job "${{ github.event.body }}"
+      run: go run ./ job "${{ github.event.comment.body }}"
         
 
