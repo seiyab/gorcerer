@@ -20,6 +20,7 @@ jobs:
 
     - name: Print variables
       run: |
+        echo ${{ github.event.authorAssociation }}
         echo ${{ github.event.author.id }}
         echo ${{ github.event.repository.owner.id }}
 
