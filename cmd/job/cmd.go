@@ -1,7 +1,6 @@
-package inspect
+package job
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/google/go-github/v60/github"
@@ -10,16 +9,24 @@ import (
 
 func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:  "inspect",
+		Use:  "job",
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			m, err := inspect(args[0])
+			j, err := Parse(args[0])
+			if err != nil {
+				return err
+			}
+
+			m, err := j()
+			if err != nil {
+				return err
+			}
+			_, err = fmt.Println(m)
 			if err != nil {
 				return err
 			}
 			_ = github.NewClient(nil)
-			fmt.Println(m)
-			return errors.New("not implemented yet")
+			return nil
 		},
 	}
 	return cmd
