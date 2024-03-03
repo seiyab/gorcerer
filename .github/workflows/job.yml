@@ -5,7 +5,7 @@ on:
     types: [created]
 
 jobs:
-  build:
+  job:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -14,6 +14,14 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: '1.20'
+
+    - name: Set up gost
+      run: go install github.com/seiyab/gost/gost@latest
+
+    - name: Print variables
+      run: |
+        echo ${{ github.event.author.id }}
+        echo ${{ github.event.repository.owner.id }}
 
     - name: Run
       if: ${{ github.event.author.id == github.event.repository.owner.id }}
