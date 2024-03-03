@@ -7,6 +7,8 @@ on:
 jobs:
   job:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
     - uses: actions/checkout@v3
 
@@ -24,6 +26,8 @@ jobs:
       run: go install github.com/seiyab/gost/gost@latest
 
     - name: Run
-      run: go run ./ job "${{ github.event.comment.body }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: go run ./ job "${{ github.event.comment.body }}" --issue "${{ github.event.issue.id }}"
         
 
