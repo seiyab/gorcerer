@@ -49,9 +49,14 @@ func gitClone(url string, dir string) error {
 
 func formatReport(report gost.Report) string {
 	var lines []string
+	known := make(map[gost.Diagnostic]struct{})
 	for _, as := range report {
 		for _, a := range as {
 			for _, d := range a {
+				if _, ok := known[d]; ok {
+					continue
+				}
+				known[d] = struct{}{}
 				lines = append(lines,
 					fmt.Sprintf(
 						"%s:%d:%d %s",
