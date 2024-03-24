@@ -10,24 +10,22 @@ jobs:
     permissions:
       issues: write
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.21.1'
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.21.1"
 
-    - name: Print variables
-      run: |
-        echo ${{ github.event.comment.author.id }}
-        echo ${{ github.event.repository.owner.id }}
+      - name: Print variables
+        run: |
+          echo ${{ github.event.comment.author.id }}
+          echo ${{ github.event.repository.owner.id }}
 
-    - name: Set up gost
-      run: go install github.com/seiyab/gost/gost@latest
+      - name: Set up gost
+        run: go install github.com/seiyab/gost@latest
 
-    - name: Run
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: go run ./ job "${{ github.event.comment.body }}" --issue "${{ github.event.issue.number }}"
-        
-
+      - name: Run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: go run ./ job "${{ github.event.comment.body }}" --issue "${{ github.event.issue.number }}"
