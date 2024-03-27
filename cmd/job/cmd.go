@@ -9,6 +9,8 @@ import (
 )
 
 func Cmd() *cobra.Command {
+	var owner string
+	var repository string
 	var issue int
 	cmd := &cobra.Command{
 		Use:  "job",
@@ -28,7 +30,18 @@ func Cmd() *cobra.Command {
 			if issue != 0 {
 				c := github.NewClient(nil).
 					WithAuthToken(os.Getenv("GITHUB_TOKEN"))
-				out = output.NewIssueComment(c, issue)
+				target := output.IssueCommentTarget{
+					Owner:      "seiyab",
+					Repository: "gorcerer",
+					Issue:      issue,
+				}
+				if owner != "" {
+					target.Owner = owner
+				}
+				if repository != "" {
+					target.Repository = repository
+				}
+				out = output.NewIssueComment(c, target)
 			}
 			if err := out(m); err != nil {
 				return err
@@ -37,5 +50,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 	cmd.Flags().IntVar(&issue, "issue", 0, "issue number")
+	cmd.Flags().StringVar(&owner, "owner", "", "owner")
+	cmd.Flags().StringVar(&repository, "repository", "", "repository")
 	return cmd
 }

@@ -27,5 +27,6 @@ jobs:
 
       - name: Run
         env:
+          JOB: ${{ github.event.comment.body }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: go run ./ job "${{ github.event.comment.body }}" --issue "${{ github.event.issue.number }}"
+        run: go run ./ job "$JOB" --issue "${{ github.event.issue.number }}"

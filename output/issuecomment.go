@@ -16,13 +16,19 @@ func Println(a ...any) error {
 
 var _ Output = Println
 
-func NewIssueComment(client *github.Client, issue int) Output {
+type IssueCommentTarget struct {
+	Owner      string
+	Repository string
+	Issue      int
+}
+
+func NewIssueComment(client *github.Client, target IssueCommentTarget) Output {
 	return func(a ...any) error {
 		s := fmt.Sprintln(a...)
 		_, _, err := client.Issues.CreateComment(
 			context.Background(),
-			"seiyab", "gorcerer",
-			issue,
+			target.Owner, target.Repository,
+			target.Issue,
 			&github.IssueComment{Body: &s},
 		)
 		if err != nil {
